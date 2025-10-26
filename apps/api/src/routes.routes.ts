@@ -13,5 +13,11 @@ export const API_ROUTES = {
     byDay: '/reservations/by-day',
     byUser: '/reservations/by-user',
   },
+  
+  // CSV Parser Module
+  csvParser: {
+    base: '/csv-parser',
+    parse: '/csv-parser/parse',
+  },
 };
 

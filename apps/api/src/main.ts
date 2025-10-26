@@ -22,6 +22,7 @@ async function bootstrap() {
   Logger.log('  GET  /api');
   Logger.log('  GET  /api/reservations/by-day?amenityId={id}&date={date}');
   Logger.log('  GET  /api/reservations/by-user?userId={id}');
+  Logger.log('  POST /api/csv-parser/parse (with CSV file upload)');
   Logger.log('');
 }
 
