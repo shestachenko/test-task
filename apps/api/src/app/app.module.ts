@@ -1,9 +1,17 @@
 import {Module} from '@nestjs/common';
+import {MongooseModule} from '@nestjs/mongoose';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
+import {ReservationModule} from '../modules/reservation/reservation.module';
+import {AmenityModule} from '../modules/amenity/amenity.module';
+import {databaseConfig} from '../config/database.config';
 
 @Module({
-  imports: [],
+  imports: [
+    MongooseModule.forRoot(databaseConfig.uri, databaseConfig.options),
+    AmenityModule,
+    ReservationModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

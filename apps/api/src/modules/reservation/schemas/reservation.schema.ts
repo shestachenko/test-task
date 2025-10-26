@@ -1,0 +1,25 @@
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import {Document} from 'mongoose';
+import {ReservationModel} from '@red/shared';
+
+export type ReservationDocument = Reservation & Document;
+
+@Schema({timestamps: true})
+export class Reservation implements Omit<ReservationModel, 'id'> {
+  @Prop({required: true})
+  amenityId: number;
+
+  @Prop({required: true})
+  userId: number;
+
+  @Prop({required: true})
+  startTime: number;  // minutes from 00:00 (e.g., 300 = 5:00)
+
+  @Prop({required: true})
+  endTime: number;    // minutes from 00:00 (e.g., 300 = 5:00)
+
+  @Prop({required: true, type: Date})
+  date: Date;
+}
+
+export const ReservationSchema = SchemaFactory.createForClass(Reservation);

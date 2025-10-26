@@ -1,0 +1,17 @@
+/**
+ * API Routes Documentation
+ * Base URL: http://localhost:3000/api
+ */
+
+export const API_ROUTES = {
+  // Root
+  root: '/',
+  
+  // Reservations Module
+  reservations: {
+    base: '/reservations',
+    byDay: '/reservations/by-day',
+    byUser: '/reservations/by-user',
+  },
+};
+
