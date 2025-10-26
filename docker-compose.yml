@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # MongoDB database
+  mongodb:
+    image: mongo:7
+    container_name: red-api-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: hotel-reservation
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - red-network
+
+  # NestJS API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: red-api-server
+    restart: unless-stopped
+    ports:
+      - "3333:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongodb:27017/hotel-reservation
+    depends_on:
+      - mongodb
+    networks:
+      - red-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  # Angular UI
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    container_name: red-api-ui
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    networks:
+      - red-network
+
+networks:
+  red-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+

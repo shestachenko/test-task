@@ -1,0 +1,41 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy nx workspace files
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig.base.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY apps/api ./apps/api
+COPY libs ./libs
+COPY apps/api/tsconfig.json ./apps/api/
+COPY libs/shared/tsconfig.json ./libs/shared/
+
+# Build the API
+RUN npx nx build api --configuration=production
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy built application and dependencies from builder
+COPY --from=builder /app/dist/api ./
+COPY --from=builder /app/node_modules ./node_modules
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/api', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+# Start the application
+CMD ["node", "main.js"]
+
