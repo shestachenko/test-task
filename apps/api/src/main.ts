@@ -20,6 +20,8 @@ async function bootstrap() {
   
   Logger.log('\n📋 Available Routes:');
   Logger.log('  GET  /api');
+  Logger.log('  POST /api/auth/register (register new user)');
+  Logger.log('  POST /api/auth/login (login user)');
   Logger.log('  GET  /api/reservations/by-day?amenityId={id}&date={date}');
   Logger.log('  GET  /api/reservations/by-user?userId={id}');
   Logger.log('  POST /api/csv-parser/parse (with CSV file upload)');

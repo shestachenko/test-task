@@ -7,6 +7,13 @@ export const API_ROUTES = {
   // Root
   root: '/',
   
+  // Authentication Module
+  auth: {
+    base: '/auth',
+    register: '/auth/register',
+    login: '/auth/login',
+  },
+  
   // Reservations Module
   reservations: {
     base: '/reservations',

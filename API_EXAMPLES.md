@@ -7,7 +7,91 @@ http://localhost:3000/api
 
 ## Endpoints
 
-### 1. GET /api
+### 1. POST /api/auth/register
+Register a new user account
+
+**Request:**
+```bash
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "johndoe",
+    "password": "securepassword123",
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com"
+  }'
+```
+
+**Request Body:**
+- `username` (required, unique) - Username for the account
+- `password` (required) - Password (will be hashed)
+- `first_name` (required) - User's first name
+- `last_name` (required) - User's last name
+- `email` (required) - User's email address
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "userId": "507f1f77bcf86cd799439011",
+    "username": "johndoe",
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+**Error Response (Username already exists):**
+```json
+{
+  "success": false,
+  "error": "Username already exists"
+}
+```
+
+---
+
+### 2. POST /api/auth/login
+Login with username and password
+
+**Request:**
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "johndoe",
+    "password": "securepassword123"
+  }'
+```
+
+**Request Body:**
+- `username` (required) - Username
+- `password` (required) - Password
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "userId": "507f1f77bcf86cd799439011",
+    "username": "johndoe",
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+**Error Response (Invalid credentials):**
+```json
+{
+  "success": false,
+  "error": "Invalid username or password"
+}
+```
+
+---
+
+### 3. GET /api
 Health check endpoint
 
 **Request:**
@@ -24,7 +108,7 @@ curl http://localhost:3000/api
 
 ---
 
-### 2. GET /api/reservations/by-day
+### 4. GET /api/reservations/by-day
 Get reservations for a specific amenity on a specific date
 
 **Request:**
@@ -66,7 +150,7 @@ curl "http://localhost:3000/api/reservations/by-day?amenityId=1&date=15926112000
 
 ---
 
-### 3. GET /api/reservations/by-user
+### 5. GET /api/reservations/by-user
 Get all bookings for a user grouped by day
 
 **Request:**
@@ -166,20 +250,73 @@ const getUserBookings = async (userId) => {
   });
   return response.data;
 };
+
+// Register a new user
+const registerUser = async (userData) => {
+  const response = await axios.post('http://localhost:3000/api/auth/register', userData);
+  return response.data;
+};
+
+// Login
+const login = async (username, password) => {
+  const response = await axios.post('http://localhost:3000/api/auth/login', {
+    username,
+    password
+  });
+  return response.data;
+};
+
+// Usage
+registerUser({
+  username: 'johndoe',
+  password: 'securepassword123',
+  first_name: 'John',
+  last_name: 'Doe',
+  email: 'john.doe@example.com'
+});
+
+login('johndoe', 'securepassword123');
 ```
 
 ---
 
 ## Testing with Postman
 
-1. **Get Reservations by Day**
+1. **Register User**
+   - Method: `POST`
+   - URL: `http://localhost:3000/api/auth/register`
+   - Headers: `Content-Type: application/json`
+   - Body (raw JSON):
+     ```json
+     {
+       "username": "johndoe",
+       "password": "securepassword123",
+       "first_name": "John",
+       "last_name": "Doe",
+       "email": "john.doe@example.com"
+     }
+     ```
+
+2. **Login**
+   - Method: `POST`
+   - URL: `http://localhost:3000/api/auth/login`
+   - Headers: `Content-Type: application/json`
+   - Body (raw JSON):
+     ```json
+     {
+       "username": "johndoe",
+       "password": "securepassword123"
+     }
+     ```
+
+3. **Get Reservations by Day**
    - Method: `GET`
    - URL: `http://localhost:3000/api/reservations/by-day`
    - Params: 
      - `amenityId`: `1`
      - `date`: `2024-01-15`
 
-2. **Get User Bookings**
+4. **Get User Bookings**
    - Method: `GET`
    - URL: `http://localhost:3000/api/reservations/by-user`
    - Params:
@@ -189,6 +326,27 @@ const getUserBookings = async (userId) => {
 
 ## Error Responses
 
+### Authentication Errors
+
+**Username already exists:**
+```json
+{
+  "success": false,
+  "error": "Username already exists"
+}
+```
+
+**Invalid credentials:**
+```json
+{
+  "success": false,
+  "error": "Invalid username or password"
+}
+```
+
+### Other Errors
+
+**Invalid date format:**
 ```json
 {
   "success": false,
@@ -196,6 +354,7 @@ const getUserBookings = async (userId) => {
 }
 ```
 
+**No file uploaded:**
 ```json
 {
   "success": false,
