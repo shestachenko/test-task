@@ -1,8 +1,8 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import {HydratedDocument} from 'mongoose';
 import {ReservationModel} from '@red/shared';
 
-export type ReservationDocument = Reservation & Document;
+export type ReservationDocument = HydratedDocument<Reservation>;
 
 @Schema({timestamps: true})
 export class Reservation implements Omit<ReservationModel, 'id'> {
