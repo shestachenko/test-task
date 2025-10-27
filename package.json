@@ -8,6 +8,10 @@
     "serve:api": "nx serve api",
     "build": "nx run-many -t build --all",
     "test": "nx run-many -t test --all",
+    "test:api": "nx test api --skip-nx-cache",
+    "test:api:watch": "nx test api --watch",
+    "test:api:coverage": "nx test api --coverage",
+    "test:ui": "nx test ui",
     "lint": "nx run-many -t lint --all",
     "format": "nx format:write"
   },

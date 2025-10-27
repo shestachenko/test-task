@@ -1,12 +1,12 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import {HydratedDocument} from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
 export interface UserMethods {
   validatePassword(password: string): Promise<boolean>;
 }
 
-export type UserDocument = User & Document & UserMethods;
+export type UserDocument = HydratedDocument<User & UserMethods>;
 
 @Schema({timestamps: true})
 export class User {

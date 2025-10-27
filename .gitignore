@@ -7,3 +7,11 @@ node_modules
 .vscode
 .idea
 dist/
+
+# Test results and coverage
+coverage/
+.nyc_output/
+test-results/
+junit.xml
+*.lcov
+*.log

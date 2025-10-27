@@ -3,6 +3,8 @@ import {Request} from 'express';
 import {UserService} from '../services/user.service';
 import {RegisterDto, LoginDto, AuthResponseDto} from '@red/shared';
 import {BaseResponseDto} from '../../../common/dto/base-response.dto';
+import '../../../common/types/session.types';
+import {UserDocument} from '../schemas/user.schema';
 
 @Controller('auth')
 export class UserController {
@@ -13,17 +15,12 @@ export class UserController {
   async register(@Body() registerDto: RegisterDto, @Req() req: Request): Promise<BaseResponseDto<AuthResponseDto>> {
     try {
       const user = await this.userService.register(registerDto);
-      
-      // Save user data in session
-      req.session.userId = user._id.toString();
-      req.session.username = user.username;
-      req.session.email = user.email;
-      
-      const response: AuthResponseDto = {
+      this.saveUserToSession(user, req);
+      const response = {
         userId: user._id.toString(),
         username: user.username,
         email: user.email,
-      };
+      }
 
       return BaseResponseDto.ok<AuthResponseDto>(response);
     } catch (error) {
@@ -39,17 +36,12 @@ export class UserController {
   async login(@Body() loginDto: LoginDto, @Req() req: Request): Promise<BaseResponseDto<AuthResponseDto>> {
     try {
       const user = await this.userService.login(loginDto.username, loginDto.password);
-      
-      // Save user data in session
-      req.session.userId = user._id.toString();
-      req.session.username = user.username;
-      req.session.email = user.email;
-      
-      const response: AuthResponseDto = {
+      this.saveUserToSession(user, req);
+      const response = {
         userId: user._id.toString(),
         username: user.username,
         email: user.email,
-      };
+      }
 
       return BaseResponseDto.ok<AuthResponseDto>(response);
     } catch (error) {
@@ -63,13 +55,24 @@ export class UserController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request): Promise<BaseResponseDto<{message: string}>> {
-    req.session.destroy((err) => {
-      if (err) {
-        return BaseResponseDto.fail<{message: string}>('Logout failed');
-      }
+    return new Promise((resolve) => {
+      req.session.destroy((err) => {
+        if (err) {
+          resolve(BaseResponseDto.fail<{message: string}>('Logout failed'));
+        } else {
+          resolve(BaseResponseDto.ok<{message: string}>({message: 'Logged out successfully'}));
+        }
+      });
     });
-    
-    return BaseResponseDto.ok<{message: string}>({message: 'Logged out successfully'});
+  }
+
+  /**
+   * Helper method to save user data to session and create AuthResponse
+   */
+  private saveUserToSession(user: UserDocument, req: Request): void {
+    req.session.userId = user._id.toString();
+    req.session.username = user.username;
+    req.session.email = user.email;
   }
 }
 
