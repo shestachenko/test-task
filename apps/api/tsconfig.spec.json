@@ -7,7 +7,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021",
-    "baseUrl": "../../"
+    "baseUrl": "../../",
+    "paths": {
+      "@red/shared": ["libs/shared/src/index.ts"]
+    }
   },
   "include": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"],
   "exclude": []

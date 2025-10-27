@@ -175,7 +175,7 @@ describe('UserController', () => {
 
       expect(mockRequest.session.destroy).toHaveBeenCalled();
       expect(result.success).toBe(true);
-      expect(result.data.message).toBe('Logged out successfully');
+      expect(result.data?.message).toBe('Logged out successfully');
     });
 
     it('should return fail response if logout fails', async () => {
