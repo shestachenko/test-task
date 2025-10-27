@@ -1,13 +1,15 @@
-import {Controller, Post, UseInterceptors, UploadedFile, BadRequestException} from '@nestjs/common';
+import {Controller, Post, UseInterceptors, UploadedFile, BadRequestException, UseGuards} from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
 import {CsvParserService} from '../services/csv-parser.service';
 import {memoryStorage} from 'multer';
+import {AuthGuard} from '../../../common/guards/auth.guard';
 
 @Controller('csv-parser')
 export class CsvParserController {
   constructor(private readonly csvParserService: CsvParserService) {}
 
   @Post('parse')
+  @UseGuards(AuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),

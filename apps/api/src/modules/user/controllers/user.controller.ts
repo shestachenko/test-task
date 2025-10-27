@@ -1,4 +1,5 @@
-import {Controller, Post, Body, HttpCode, HttpStatus, ConflictException, UnauthorizedException} from '@nestjs/common';
+import {Controller, Post, Body, HttpCode, HttpStatus, ConflictException, UnauthorizedException, Req} from '@nestjs/common';
+import {Request} from 'express';
 import {UserService} from '../services/user.service';
 import {RegisterDto, LoginDto, AuthResponseDto} from '@red/shared';
 import {BaseResponseDto} from '../../../common/dto/base-response.dto';
@@ -9,9 +10,14 @@ export class UserController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() registerDto: RegisterDto): Promise<BaseResponseDto<AuthResponseDto>> {
+  async register(@Body() registerDto: RegisterDto, @Req() req: Request): Promise<BaseResponseDto<AuthResponseDto>> {
     try {
       const user = await this.userService.register(registerDto);
+      
+      // Save user data in session
+      req.session.userId = user._id.toString();
+      req.session.username = user.username;
+      req.session.email = user.email;
       
       const response: AuthResponseDto = {
         userId: user._id.toString(),
@@ -30,9 +36,14 @@ export class UserController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto): Promise<BaseResponseDto<AuthResponseDto>> {
+  async login(@Body() loginDto: LoginDto, @Req() req: Request): Promise<BaseResponseDto<AuthResponseDto>> {
     try {
       const user = await this.userService.login(loginDto.username, loginDto.password);
+      
+      // Save user data in session
+      req.session.userId = user._id.toString();
+      req.session.username = user.username;
+      req.session.email = user.email;
       
       const response: AuthResponseDto = {
         userId: user._id.toString(),
@@ -47,6 +58,18 @@ export class UserController {
       }
       return BaseResponseDto.fail<AuthResponseDto>('Login failed');
     }
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request): Promise<BaseResponseDto<{message: string}>> {
+    req.session.destroy((err) => {
+      if (err) {
+        return BaseResponseDto.fail<{message: string}>('Logout failed');
+      }
+    });
+    
+    return BaseResponseDto.ok<{message: string}>({message: 'Logged out successfully'});
   }
 }
 
