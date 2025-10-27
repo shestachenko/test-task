@@ -8,6 +8,7 @@ describe('AmenityRepository', () => {
 
   const mockModel = {
     findOne: jest.fn(),
+    findById: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -33,10 +34,9 @@ describe('AmenityRepository', () => {
   });
 
   describe('findById', () => {
-    it('should find amenity by numericId', async () => {
+    it('should find amenity by id', async () => {
       const mockAmenity = {
         _id: '507f1f77bcf86cd799439011',
-        numericId: 1,
         name: 'Swimming Pool',
       };
 
@@ -44,12 +44,12 @@ describe('AmenityRepository', () => {
         exec: jest.fn().mockResolvedValue(mockAmenity),
       };
 
-      mockModel.findOne.mockReturnValue(mockQuery);
+      mockModel.findById = jest.fn().mockReturnValue(mockQuery);
 
-      const result = await repository.findById(1);
+      const result = await repository.findById('507f1f77bcf86cd799439011');
 
       expect(result).toEqual(mockAmenity);
-      expect(mockModel.findOne).toHaveBeenCalledWith({numericId: 1});
+      expect(mockModel.findById).toHaveBeenCalledWith('507f1f77bcf86cd799439011');
       expect(mockQuery.exec).toHaveBeenCalled();
     });
 
@@ -58,12 +58,12 @@ describe('AmenityRepository', () => {
         exec: jest.fn().mockResolvedValue(null),
       };
 
-      mockModel.findOne.mockReturnValue(mockQuery);
+      mockModel.findById = jest.fn().mockReturnValue(mockQuery);
 
-      const result = await repository.findById(999);
+      const result = await repository.findById('507f1f77bcf86cd799439999');
 
       expect(result).toBeNull();
-      expect(mockModel.findOne).toHaveBeenCalledWith({numericId: 999});
+      expect(mockModel.findById).toHaveBeenCalledWith('507f1f77bcf86cd799439999');
       expect(mockQuery.exec).toHaveBeenCalled();
     });
   });

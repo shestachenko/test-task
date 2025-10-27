@@ -11,7 +11,7 @@ export class ReservationService {
     private readonly amenityService: AmenityService
   ) {}
 
-  async getReservationsByAmenityAndDate(amenityId: number, date: Date): Promise<ReservationBookingDto[]> {
+  async getReservationsByAmenityAndDate(amenityId: string, date: Date): Promise<ReservationBookingDto[]> {
     const reservations = await this.reservationRepository.findByAmenityAndDate(amenityId, date);
 
     // Get amenity details
@@ -39,7 +39,7 @@ export class ReservationService {
     });
   }
 
-  async getUserBookingsGroupedByDay(userId: number): Promise<DayBookingsDto[]> {
+  async getUserBookingsGroupedByDay(userId: string): Promise<DayBookingsDto[]> {
     const reservations = await this.reservationRepository.findByUserId(userId);
 
     // Group reservations by date
@@ -60,7 +60,7 @@ export class ReservationService {
     const uniqueAmenityIds = new Set(reservations.map(r => r.amenityId));
     
     // Fetch all amenities in parallel
-    const amenityMap = new Map<number, string>();
+    const amenityMap = new Map<string, string>();
     await Promise.all(
       Array.from(uniqueAmenityIds).map(async (amenityId) => {
         const amenity = await this.amenityService.findById(amenityId);

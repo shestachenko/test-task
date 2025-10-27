@@ -12,6 +12,7 @@ services:
       MONGO_INITDB_DATABASE: hotel-reservation
     volumes:
       - mongodb_data:/data/db
+      - ./.local/dump:/docker-entrypoint-initdb.d
     networks:
       - red-network
 

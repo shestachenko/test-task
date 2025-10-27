@@ -5,7 +5,7 @@ import {AmenityRepository} from '../repositories/amenity.repository';
 export class AmenityService {
   constructor(private readonly amenityRepository: AmenityRepository) {}
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.amenityRepository.findById(id);
   }
 }

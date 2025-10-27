@@ -1,0 +1,2 @@
+# This directory contains MongoDB initialization scripts
+# The 01-init-db.js script will automatically seed the database when the container starts

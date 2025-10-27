@@ -9,8 +9,8 @@ export class AmenityRepository {
     @InjectModel(Amenity.name) private amenityModel: Model<AmenityDocument>
   ) {}
 
-  async findById(id: number): Promise<AmenityDocument | null> {
-    return this.amenityModel.findOne({numericId: id}).exec();
+  async findById(id: string): Promise<AmenityDocument | null> {
+    return this.amenityModel.findById(id).exec();
   }
 }
 

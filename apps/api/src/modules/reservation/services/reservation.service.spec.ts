@@ -47,28 +47,27 @@ describe('ReservationService', () => {
 
   describe('getReservationsByAmenityAndDate', () => {
     it('should return reservations for amenity and date', async () => {
-      const amenityId = 1;
+      const amenityId = '507f1f77bcf86cd799439011';
       const date = new Date('2024-01-15');
 
       const mockAmenity = {
-        _id: 'amenity123',
-        numericId: 1,
+        _id: '507f1f77bcf86cd799439011',
         name: 'Swimming Pool',
       };
 
       const mockReservations = [
         {
           _id: {toString: () => 'reservation1'},
-          userId: 1,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 480, // 8:00 AM
           endTime: 540,   // 9:00 AM
           date: new Date('2024-01-15'),
         },
         {
           _id: {toString: () => 'reservation2'},
-          userId: 2,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439022',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 600, // 10:00 AM
           endTime: 660,   // 11:00 AM
           date: new Date('2024-01-15'),
@@ -81,21 +80,21 @@ describe('ReservationService', () => {
       const result = await service.getReservationsByAmenityAndDate(amenityId, date);
 
       expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({reservationId: 'reservation1', userId: 1, startTime: '08:00', duration: 60, amenityName: 'Swimming Pool'});
-      expect(result[1]).toEqual({reservationId: 'reservation2', userId: 2, startTime: '10:00', duration: 60, amenityName: 'Swimming Pool'});
+      expect(result[0]).toEqual({reservationId: 'reservation1', userId: '507f1f77bcf86cd799439021', startTime: '08:00', duration: 60, amenityName: 'Swimming Pool'});
+      expect(result[1]).toEqual({reservationId: 'reservation2', userId: '507f1f77bcf86cd799439022', startTime: '10:00', duration: 60, amenityName: 'Swimming Pool'});
       expect(mockReservationRepository.findByAmenityAndDate).toHaveBeenCalledWith(amenityId, date);
       expect(mockAmenityService.findById).toHaveBeenCalledWith(amenityId);
     });
 
     it('should return empty array when amenity not found', async () => {
-      const amenityId = 999;
+      const amenityId = '507f1f77bcf86cd799439999';
       const date = new Date('2024-01-15');
 
       const mockReservations = [
         {
           _id: {toString: () => 'reservation1'},
           userId: 1,
-          amenityId: 999,
+          amenityId: '507f1f77bcf86cd799439999',
           startTime: 480,
           endTime: 540,
           date: new Date('2024-01-15'),
@@ -111,12 +110,11 @@ describe('ReservationService', () => {
     });
 
     it('should return empty array when no reservations found', async () => {
-      const amenityId = 1;
+      const amenityId = '507f1f77bcf86cd799439011';
       const date = new Date('2024-01-15');
 
       const mockAmenity = {
-        _id: 'amenity123',
-        numericId: 1,
+        _id: '507f1f77bcf86cd799439011',
         name: 'Swimming Pool',
       };
 
@@ -129,20 +127,19 @@ describe('ReservationService', () => {
     });
 
     it('should handle single digit hours and minutes', async () => {
-      const amenityId = 1;
+      const amenityId = '507f1f77bcf86cd799439011';
       const date = new Date('2024-01-15');
 
       const mockAmenity = {
-        _id: 'amenity123',
-        numericId: 1,
+        _id: '507f1f77bcf86cd799439011',
         name: 'Tennis Court',
       };
 
       const mockReservations = [
         {
           _id: {toString: () => 'reservation1'},
-          userId: 1,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 30,   // 0:30 AM
           endTime: 60,     // 1:00 AM
           date: new Date('2024-01-15'),
@@ -160,29 +157,29 @@ describe('ReservationService', () => {
 
   describe('getUserBookingsGroupedByDay', () => {
     it('should return user bookings grouped by day', async () => {
-      const userId = 1;
+      const userId = '507f1f77bcf86cd799439021';
 
       const mockReservations = [
         {
           _id: {toString: () => 'reservation1'},
-          userId: 1,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 480,  // 8:00 AM
           endTime: 540,    // 9:00 AM
           date: new Date('2024-01-15'),
         },
         {
           _id: {toString: () => 'reservation2'},
-          userId: 1,
-          amenityId: 2,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439012',
           startTime: 600,  // 10:00 AM
           endTime: 660,    // 11:00 AM
           date: new Date('2024-01-15'),
         },
         {
           _id: {toString: () => 'reservation3'},
-          userId: 1,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 720,  // 12:00 PM
           endTime: 780,    // 1:00 PM
           date: new Date('2024-01-16'),
@@ -190,8 +187,8 @@ describe('ReservationService', () => {
       ];
 
       const mockAmenities = [
-        {_id: 'amenity1', numericId: 1, name: 'Swimming Pool'},
-        {_id: 'amenity2', numericId: 2, name: 'Tennis Court'},
+        {_id: '507f1f77bcf86cd799439011', name: 'Swimming Pool'},
+        {_id: '507f1f77bcf86cd799439012', name: 'Tennis Court'},
       ];
 
       mockReservationRepository.findByUserId.mockResolvedValue(mockReservations);
@@ -213,7 +210,7 @@ describe('ReservationService', () => {
     });
 
     it('should return empty array when no reservations found', async () => {
-      const userId = 999;
+      const userId = '507f1f77bcf86cd799439999';
 
       mockReservationRepository.findByUserId.mockResolvedValue([]);
 
@@ -223,29 +220,29 @@ describe('ReservationService', () => {
     });
 
     it('should sort days in ascending order', async () => {
-      const userId = 1;
+      const userId = '507f1f77bcf86cd799439021';
 
       const mockReservations = [
         {
           _id: {toString: () => 'reservation1'},
-          userId: 1,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 480,
           endTime: 540,
           date: new Date('2024-01-17'),
         },
         {
           _id: {toString: () => 'reservation2'},
-          userId: 1,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 600,
           endTime: 660,
           date: new Date('2024-01-15'),
         },
         {
           _id: {toString: () => 'reservation3'},
-          userId: 1,
-          amenityId: 1,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439011',
           startTime: 720,
           endTime: 780,
           date: new Date('2024-01-16'),
@@ -253,8 +250,7 @@ describe('ReservationService', () => {
       ];
 
       const mockAmenity = {
-        _id: 'amenity1',
-        numericId: 1,
+        _id: '507f1f77bcf86cd799439011',
         name: 'Swimming Pool',
       };
 
@@ -270,13 +266,13 @@ describe('ReservationService', () => {
     });
 
     it('should handle unknown amenities gracefully', async () => {
-      const userId = 1;
+      const userId = '507f1f77bcf86cd799439021';
 
       const mockReservations = [
         {
           _id: {toString: () => 'reservation1'},
-          userId: 1,
-          amenityId: 999,
+          userId: '507f1f77bcf86cd799439021',
+          amenityId: '507f1f77bcf86cd799439999',
           startTime: 480,
           endTime: 540,
           date: new Date('2024-01-15'),

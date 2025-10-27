@@ -6,9 +6,6 @@ export type AmenityDocument = HydratedDocument<Amenity>;
 
 @Schema({timestamps: true})
 export class Amenity implements Omit<AmenityModel, 'id'> {
-  @Prop({required: true, unique: true})
-  numericId: number;
-
   @Prop({required: true})
   name: string;
 }

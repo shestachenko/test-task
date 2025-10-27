@@ -41,7 +41,7 @@ describe('ReservationController', () => {
 
   describe('getReservationsByDay', () => {
     it('should successfully get reservations by day', async () => {
-      const amenityId = 1;
+      const amenityId = '507f1f77bcf86cd799439011';
       const dateString = '2024-01-15';
       const mockReservations = [
         {
@@ -77,7 +77,7 @@ describe('ReservationController', () => {
     });
 
     it('should return fail response for invalid date format', async () => {
-      const amenityId = 1;
+      const amenityId = '507f1f77bcf86cd799439011';
       const dateString = 'invalid-date';
 
       const result = await controller.getReservationsByDay(
@@ -90,7 +90,7 @@ describe('ReservationController', () => {
     });
 
     it('should propagate error when service throws error', async () => {
-      const amenityId = 1;
+      const amenityId = '507f1f77bcf86cd799439011';
       const dateString = '2024-01-15';
 
       mockReservationService.getReservationsByAmenityAndDate.mockRejectedValue(
@@ -105,7 +105,7 @@ describe('ReservationController', () => {
 
   describe('getUserBookings', () => {
     it('should successfully get user bookings', async () => {
-      const userId = 1;
+      const userId = '507f1f77bcf86cd799439021';
       const mockBookings = [
         {
           date: '2024-01-15',
@@ -149,7 +149,7 @@ describe('ReservationController', () => {
     });
 
     it('should propagate error when service throws error', async () => {
-      const userId = 999;
+      const userId = '507f1f77bcf86cd799439999';
 
       mockReservationService.getUserBookingsGroupedByDay.mockRejectedValue(
         new Error('Database error'),
@@ -161,7 +161,7 @@ describe('ReservationController', () => {
     });
 
     it('should return empty array when user has no bookings', async () => {
-      const userId = 100;
+      const userId = '507f1f77bcf86cd799439100';
       const mockBookings: any[] = [];
 
       mockReservationService.getUserBookingsGroupedByDay.mockResolvedValue(

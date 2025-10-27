@@ -6,11 +6,11 @@ export type ReservationDocument = HydratedDocument<Reservation>;
 
 @Schema({timestamps: true})
 export class Reservation implements Omit<ReservationModel, 'id'> {
-  @Prop({required: true})
-  amenityId: number;
+  @Prop({required: true, type: String})
+  amenityId: string;
 
-  @Prop({required: true})
-  userId: number;
+  @Prop({required: true, type: String})
+  userId: string;
 
   @Prop({required: true})
   startTime: number;  // minutes from 00:00 (e.g., 300 = 5:00)

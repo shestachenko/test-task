@@ -114,15 +114,15 @@ Get reservations for a specific amenity on a specific date
 **Request:**
 ```bash
 # Using curl
-curl "http://localhost:3000/api/reservations/by-day?amenityId=1&date=2024-01-15"
+curl "http://localhost:3000/api/reservations/by-day?amenityId=507f1f77bcf86cd799439011&date=2024-01-15"
 
 # Using date in different formats
-curl "http://localhost:3000/api/reservations/by-day?amenityId=1&date=2024-01-15T00:00:00Z"
-curl "http://localhost:3000/api/reservations/by-day?amenityId=1&date=1592611200000"
+curl "http://localhost:3000/api/reservations/by-day?amenityId=507f1f77bcf86cd799439011&date=2024-01-15T00:00:00Z"
+curl "http://localhost:3000/api/reservations/by-day?amenityId=507f1f77bcf86cd799439011&date=1592611200000"
 ```
 
 **Query Parameters:**
-- `amenityId` (required) - Amenity ID (number)
+- `amenityId` (required) - Amenity ID (MongoDB ObjectId string)
 - `date` (required) - Date in any parseable format
 
 **Example Response:**
@@ -156,14 +156,14 @@ Get all bookings for a user grouped by day
 **Request:**
 ```bash
 # Using curl
-curl "http://localhost:3000/api/reservations/by-user?userId=123"
+curl "http://localhost:3000/api/reservations/by-user?userId=507f1f77bcf86cd799439021"
 
 # Or using PowerShell (Windows)
-Invoke-RestMethod -Uri "http://localhost:3000/api/reservations/by-user?userId=123" -Method Get
+Invoke-RestMethod -Uri "http://localhost:3000/api/reservations/by-user?userId=507f1f77bcf86cd799439021" -Method Get
 ```
 
 **Query Parameters:**
-- `userId` (required) - User ID (number)
+- `userId` (required) - User ID (MongoDB ObjectId string)
 
 **Example Response:**
 ```json
@@ -227,8 +227,8 @@ async function getUserBookings(userId) {
 }
 
 // Usage
-getReservationsByDay(1, '2024-01-15');
-getUserBookings(123);
+getReservationsByDay('507f1f77bcf86cd799439011', '2024-01-15');
+getUserBookings('507f1f77bcf86cd799439021');
 ```
 
 ### Using Axios
@@ -313,14 +313,14 @@ login('johndoe', 'securepassword123');
    - Method: `GET`
    - URL: `http://localhost:3000/api/reservations/by-day`
    - Params: 
-     - `amenityId`: `1`
+     - `amenityId`: `507f1f77bcf86cd799439011`
      - `date`: `2024-01-15`
 
 4. **Get User Bookings**
    - Method: `GET`
    - URL: `http://localhost:3000/api/reservations/by-user`
-   - Params:
-     - `userId`: `123`
+  - Params:
+    - `userId`: `507f1f77bcf86cd799439021`
 
 ---
 

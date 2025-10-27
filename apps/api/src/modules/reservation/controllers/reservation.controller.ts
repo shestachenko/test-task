@@ -10,7 +10,7 @@ export class ReservationController {
 
   @Get('by-day')
   async getReservationsByDay(
-    @Query('amenityId', ParseIntPipe) amenityId: number,
+    @Query('amenityId') amenityId: string,
     @Query('date') dateString: string,
   ): Promise<BaseResponseDto<ReservationBookingDto[]>> {
     const date = new Date(dateString);
@@ -25,7 +25,7 @@ export class ReservationController {
 
   @Get('by-user')
   async getUserBookings(
-    @Query('userId', ParseIntPipe) userId: number,
+    @Query('userId') userId: string,
   ): Promise<BaseResponseDto<DayBookingsDto[]>> {
     const bookings = await this.reservationService.getUserBookingsGroupedByDay(userId);
 

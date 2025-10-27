@@ -34,7 +34,7 @@ describe('ReservationRepository', () => {
 
   describe('findByAmenityAndDate', () => {
     it('should find reservations by amenity and date', async () => {
-      const amenityId = 1;
+      const amenityId = '507f1f77bcf86cd799439011';
       const date = new Date('2024-01-15');
       const expectedStart = new Date('2024-01-15');
       expectedStart.setHours(0, 0, 0, 0);
@@ -44,8 +44,8 @@ describe('ReservationRepository', () => {
       const mockReservations = [
         {
           _id: 'reservation1',
-          amenityId: 1,
-          userId: 1,
+          amenityId: '507f1f77bcf86cd799439011',
+          userId: '507f1f77bcf86cd799439021',
           startTime: 480,
           endTime: 540,
           date: new Date('2024-01-15'),
@@ -68,7 +68,7 @@ describe('ReservationRepository', () => {
     });
 
     it('should return empty array when no reservations found', async () => {
-      const amenityId = 999;
+      const amenityId = '507f1f77bcf86cd799439999';
       const date = new Date('2024-01-15');
 
       const mockQuery = {
@@ -87,21 +87,21 @@ describe('ReservationRepository', () => {
 
   describe('findByUserId', () => {
     it('should find reservations by user id', async () => {
-      const userId = 1;
+      const userId = '507f1f77bcf86cd799439021';
 
       const mockReservations = [
         {
           _id: 'reservation1',
-          amenityId: 1,
-          userId: 1,
+          amenityId: '507f1f77bcf86cd799439011',
+          userId: '507f1f77bcf86cd799439021',
           startTime: 480,
           endTime: 540,
           date: new Date('2024-01-15'),
         },
         {
           _id: 'reservation2',
-          amenityId: 2,
-          userId: 1,
+          amenityId: '507f1f77bcf86cd799439012',
+          userId: '507f1f77bcf86cd799439021',
           startTime: 600,
           endTime: 660,
           date: new Date('2024-01-16'),
@@ -124,7 +124,7 @@ describe('ReservationRepository', () => {
     });
 
     it('should return empty array when user has no reservations', async () => {
-      const userId = 999;
+      const userId = '507f1f77bcf86cd799439999';
 
       const mockQuery = {
         sort: jest.fn().mockReturnThis(),

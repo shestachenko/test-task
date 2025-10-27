@@ -9,7 +9,7 @@ export class ReservationRepository {
     @InjectModel(Reservation.name) private reservationModel: Model<ReservationDocument>
   ) {}
 
-  async findByAmenityAndDate(amenityId: number, date: Date): Promise<ReservationDocument[]> {
+  async findByAmenityAndDate(amenityId: string, date: Date): Promise<ReservationDocument[]> {
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
     
@@ -28,7 +28,7 @@ export class ReservationRepository {
       .exec();
   }
 
-  async findByUserId(userId: number): Promise<ReservationDocument[]> {
+  async findByUserId(userId: string): Promise<ReservationDocument[]> {
     return this.reservationModel
       .find({userId})
       .sort({date: 1, startTime: 1})
