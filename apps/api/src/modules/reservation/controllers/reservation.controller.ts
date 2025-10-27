@@ -1,4 +1,4 @@
-import {Controller, Get, Query, ParseIntPipe} from '@nestjs/common';
+import {Controller, Get, Query} from '@nestjs/common';
 import {ReservationService} from '../services/reservation.service';
 import {ReservationBookingDto} from '../dto/reservation-booking.dto';
 import {DayBookingsDto} from '../dto/user-bookings.dto';
