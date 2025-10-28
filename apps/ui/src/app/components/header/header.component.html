@@ -1,0 +1,11 @@
+<header class="header">
+  <div class="container">
+    <h1>Red API Test UI</h1>
+    
+    <div class="user-info" *ngIf="currentUser">
+      <span class="username">Logged in as: {{ currentUser.username }}</span>
+      <button (click)="logout()" class="btn-logout">Logout</button>
+    </div>
+  </div>
+</header>
+

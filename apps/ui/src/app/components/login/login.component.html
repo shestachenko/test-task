@@ -1,0 +1,88 @@
+<div class="login-container">
+  <h2>{{ isRegisterMode ? 'Register' : 'Login' }}</h2>
+  
+  <div class="toggle-buttons">
+    <button type="button" class="toggle-btn" [class.active]="!isRegisterMode" (click)="toggleMode()">
+      Login
+    </button>
+    <button type="button" class="toggle-btn" [class.active]="isRegisterMode" (click)="toggleMode()">
+      Register
+    </button>
+  </div>
+  
+  <form (ngSubmit)="onSubmit()" #authForm="ngForm">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        [(ngModel)]="username"
+        required
+        [disabled]="loading"
+        placeholder="Enter username"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+        [disabled]="loading"
+        placeholder="Enter password"
+      />
+    </div>
+
+    <!-- Registration fields -->
+    <div *ngIf="isRegisterMode">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          [(ngModel)]="firstName"
+          required
+          [disabled]="loading"
+          placeholder="Enter first name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          [(ngModel)]="lastName"
+          required
+          [disabled]="loading"
+          placeholder="Enter last name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          [disabled]="loading"
+          placeholder="Enter email"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+
+    <button type="submit" [disabled]="loading || !authForm.valid" class="btn-primary">
+      {{ loading ? (isRegisterMode ? 'Registering...' : 'Logging in...') : (isRegisterMode ? 'Register' : 'Login') }}
+    </button>
+  </form>
+</div>
