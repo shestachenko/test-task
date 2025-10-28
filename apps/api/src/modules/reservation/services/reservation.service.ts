@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {ReservationRepository} from '../repositories/reservation.repository';
 import {AmenityService} from '../../amenity/services/amenity.service';
 import {UserService} from '../../user/services/user.service';
-import {ReservationResultDto, DayBookingsDto, ReservationInfoDto} from '@red/shared';
+import {IReservationResultDto, IDayBookingsDto, IReservationInfoDto} from '@red/shared';
 
 @Injectable()
 export class ReservationService {
@@ -12,7 +12,7 @@ export class ReservationService {
     private readonly userService: UserService
   ) {}
 
-  async getReservationsByAmenityAndDate(amenityId: string, date: Date): Promise<ReservationResultDto[]> {
+  async getReservationsByAmenityAndDate(amenityId: string, date: Date): Promise<IReservationResultDto[]> {
     const reservations = await this.reservationRepository.findByAmenityAndDate(amenityId, date);
 
     // Get amenity details
@@ -65,7 +65,7 @@ export class ReservationService {
     });
   }
 
-  async getUserBookingsGroupedByDay(userId: string): Promise<DayBookingsDto[]> {
+  async getUserBookingsGroupedByDay(userId: string): Promise<IDayBookingsDto[]> {
     const reservations = await this.reservationRepository.findByUserId(userId);
 
     // Group reservations by date
@@ -102,9 +102,9 @@ export class ReservationService {
     );
 
     // Build the result
-    const result: DayBookingsDto[] = [];
+    const result: IDayBookingsDto[] = [];
     for (const [date, reservationsForDate] of reservationsByDate.entries()) {
-      const reservationsInfo: ReservationInfoDto[] = reservationsForDate.map((reservation): ReservationInfoDto => {
+      const reservationsInfo: IReservationInfoDto[] = reservationsForDate.map((reservation): IReservationInfoDto => {
         const startMinutes = reservation.startTime;
         const hours = Math.floor(startMinutes / 60);
         const minutes = startMinutes % 60;

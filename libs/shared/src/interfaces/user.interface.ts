@@ -8,16 +8,16 @@ export interface IUser extends IBaseModel {
   email: string;
 }
 
-export interface LoginDto {
+export interface ILoginDto {
   username: string;
   password: string;
 }
 
-export interface RegisterDto {
+export interface IRegisterDto {
   user: IUser;
 }
 
-export interface AuthResponseDto {
+export interface IAuthResponseDto {
   user: IUser;
 }
 

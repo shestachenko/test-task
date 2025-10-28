@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
-import {AuthResponseDto} from '@red/shared';
+import {IAuthResponseDto} from '@red/shared';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -13,7 +13,7 @@ import {Subscription} from 'rxjs';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  currentUser: AuthResponseDto|null = null;
+  currentUser: IAuthResponseDto|null = null;
   private subscription = new Subscription();
   private authService = inject(AuthService);
 

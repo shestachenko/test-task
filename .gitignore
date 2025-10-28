@@ -8,6 +8,11 @@ node_modules
 .idea
 dist/
 
+# Environment variables
+.env
+.env.local
+.env.production
+
 # Test results and coverage
 coverage/
 .nyc_output/

@@ -1,10 +1,20 @@
 import {Controller, Post, Body, HttpCode, HttpStatus, ConflictException, UnauthorizedException, Req} from '@nestjs/common';
 import {Request} from 'express';
 import {UserService} from '../services/user.service';
-import {RegisterDto, LoginDto, AuthResponseDto} from '@red/shared';
+import {IAuthResponseDto} from '@red/shared';
 import {BaseResponseDto} from '../../../common/dto/base-response.dto';
+import {RegisterDto, LoginDto} from '../dto';
 import '../../../common/types/session.types';
 import {UserDocument} from '../schemas/user.schema';
+
+interface AuthenticatedRequest extends Request {
+  session: {
+    userId?: string;
+    username?: string;
+    email?: string;
+    destroy: (callback: (err?: Error) => void) => void;
+  };
+}
 
 @Controller('auth')
 export class UserController {
@@ -12,11 +22,11 @@ export class UserController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() registerDto: RegisterDto, @Req() req: Request): Promise<BaseResponseDto<AuthResponseDto>> {
+  async register(@Body() registerDto: RegisterDto, @Req() req: AuthenticatedRequest): Promise<BaseResponseDto<IAuthResponseDto>> {
     try {
       const user = await this.userService.register(registerDto);
       this.saveUserToSession(user, req);
-      const response: AuthResponseDto = {
+      const response: IAuthResponseDto = {
         user: {
           _id: user._id.toString(),
           username: user.username,
@@ -26,22 +36,22 @@ export class UserController {
         }
       }
 
-      return BaseResponseDto.ok<AuthResponseDto>(response);
+      return BaseResponseDto.ok<IAuthResponseDto>(response);
     } catch (error) {
       if (error instanceof ConflictException) {
-        return BaseResponseDto.fail<AuthResponseDto>(error.message);
+        return BaseResponseDto.fail<IAuthResponseDto>(error.message);
       }
-      return BaseResponseDto.fail<AuthResponseDto>('Registration failed');
+      return BaseResponseDto.fail<IAuthResponseDto>('Registration failed');
     }
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto, @Req() req: Request): Promise<BaseResponseDto<AuthResponseDto>> {
+  async login(@Body() loginDto: LoginDto, @Req() req: AuthenticatedRequest): Promise<BaseResponseDto<IAuthResponseDto>> {
     try {
       const user = await this.userService.login(loginDto.username, loginDto.password);
       this.saveUserToSession(user, req);
-      const response: AuthResponseDto = {
+      const response: IAuthResponseDto = {
         user: {
           _id: user._id.toString(),
           username: user.username,
@@ -51,18 +61,18 @@ export class UserController {
         }
       }
 
-      return BaseResponseDto.ok<AuthResponseDto>(response);
+      return BaseResponseDto.ok<IAuthResponseDto>(response);
     } catch (error) {
       if (error instanceof UnauthorizedException) {
-        return BaseResponseDto.fail<AuthResponseDto>(error.message);
+        return BaseResponseDto.fail<IAuthResponseDto>(error.message);
       }
-      return BaseResponseDto.fail<AuthResponseDto>('Login failed');
+      return BaseResponseDto.fail<IAuthResponseDto>('Login failed');
     }
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Req() req: Request): Promise<BaseResponseDto<{message: string}>> {
+  async logout(@Req() req: AuthenticatedRequest): Promise<BaseResponseDto<{message: string}>> {
     return new Promise((resolve) => {
       req.session.destroy((err) => {
         if (err) {
@@ -77,7 +87,7 @@ export class UserController {
   /**
    * Helper method to save user data to session and create AuthResponse
    */
-  private saveUserToSession(user: UserDocument, req: Request): void {
+  private saveUserToSession(user: UserDocument, req: AuthenticatedRequest): void {
     req.session.userId = user._id.toString();
     req.session.username = user.username;
     req.session.email = user.email;

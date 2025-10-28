@@ -64,10 +64,10 @@ describe('ReservationController', () => {
         mockReservations,
       );
 
-      const result = await controller.getReservationsByDay(
+      const result = await controller.getReservationsByDay({
         amenityId,
-        dateString,
-      );
+        date: dateString,
+      });
 
       expect(
         service.getReservationsByAmenityAndDate,
@@ -80,10 +80,10 @@ describe('ReservationController', () => {
       const amenityId = '507f1f77bcf86cd799439011';
       const dateString = 'invalid-date';
 
-      const result = await controller.getReservationsByDay(
+      const result = await controller.getReservationsByDay({
         amenityId,
-        dateString,
-      );
+        date: dateString,
+      });
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Invalid date format');
@@ -97,7 +97,7 @@ describe('ReservationController', () => {
         new Error('Database error'),
       );
 
-      await expect(controller.getReservationsByDay(amenityId, dateString)).rejects.toThrow(
+      await expect(controller.getReservationsByDay({amenityId, date: dateString})).rejects.toThrow(
         'Database error',
       );
     });
@@ -141,7 +141,7 @@ describe('ReservationController', () => {
         mockBookings,
       );
 
-      const result = await controller.getUserBookings(userId);
+      const result = await controller.getUserBookings({userId});
 
       expect(service.getUserBookingsGroupedByDay).toHaveBeenCalledWith(userId);
       expect(result.success).toBe(true);
@@ -155,7 +155,7 @@ describe('ReservationController', () => {
         new Error('Database error'),
       );
 
-      await expect(controller.getUserBookings(userId)).rejects.toThrow(
+      await expect(controller.getUserBookings({userId})).rejects.toThrow(
         'Database error',
       );
     });
@@ -168,7 +168,7 @@ describe('ReservationController', () => {
         mockBookings,
       );
 
-      const result = await controller.getUserBookings(userId);
+      const result = await controller.getUserBookings({userId});
 
       expect(result.success).toBe(true);
       expect(result.data).toEqual([]);

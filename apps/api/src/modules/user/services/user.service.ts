@@ -1,13 +1,13 @@
 import {Injectable, UnauthorizedException, ConflictException} from '@nestjs/common';
 import {UserRepository} from '../repositories/user.repository';
-import {RegisterDto} from '@red/shared';
+import {IRegisterDto} from '@red/shared';
 import {UserDocument} from '../schemas/user.schema';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async register(registerDto: RegisterDto): Promise<UserDocument> {
+  async register(registerDto: IRegisterDto): Promise<UserDocument> {
     // Check if user already exists
     const existingUser = await this.userRepository.findByUsername(registerDto.user.username);
     if (existingUser) {

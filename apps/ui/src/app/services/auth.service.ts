@@ -2,7 +2,7 @@ import {Injectable, inject} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, BehaviorSubject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {LoginDto, RegisterDto, AuthResponseDto} from '@red/shared';
+import {ILoginDto, IRegisterDto, IAuthResponseDto} from '@red/shared';
 
 interface BaseResponse<T> {
   success: boolean;
@@ -16,7 +16,7 @@ interface BaseResponse<T> {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = '/api/auth';
-  private currentUserSubject = new BehaviorSubject<AuthResponseDto|null>(null);
+  private currentUserSubject = new BehaviorSubject<IAuthResponseDto|null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor() {
@@ -27,8 +27,8 @@ export class AuthService {
     }
   }
 
-  login(loginDto: LoginDto): Observable<BaseResponse<AuthResponseDto>> {
-    return this.http.post<BaseResponse<AuthResponseDto>>(`${this.apiUrl}/login`, loginDto).pipe(
+  login(loginDto: ILoginDto): Observable<BaseResponse<IAuthResponseDto>> {
+    return this.http.post<BaseResponse<IAuthResponseDto>>(`${this.apiUrl}/login`, loginDto).pipe(
       tap(response => {
         if (response.success && response.data) {
           localStorage.setItem('currentUser', JSON.stringify(response.data));
@@ -42,8 +42,8 @@ export class AuthService {
     );
   }
 
-  register(registerDto: RegisterDto): Observable<BaseResponse<AuthResponseDto>> {
-    return this.http.post<BaseResponse<AuthResponseDto>>(`${this.apiUrl}/register`, registerDto).pipe(
+  register(registerDto: IRegisterDto): Observable<BaseResponse<IAuthResponseDto>> {
+    return this.http.post<BaseResponse<IAuthResponseDto>>(`${this.apiUrl}/register`, registerDto).pipe(
       tap(response => {
         if (response.success && response.data) {
           localStorage.setItem('currentUser', JSON.stringify(response.data));
@@ -72,7 +72,7 @@ export class AuthService {
     );
   }
 
-  getCurrentUser(): AuthResponseDto|null {
+  getCurrentUser(): IAuthResponseDto|null {
     return this.currentUserSubject.value;
   }
 

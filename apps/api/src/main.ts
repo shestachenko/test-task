@@ -1,24 +1,52 @@
-import {Logger} from '@nestjs/common';
+import {Logger, ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app/app.module';
 import session from 'express-session';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   
+  // Security: Helmet for HTTP headers
+  app.use(helmet());
+  
+  // CORS configuration
+  app.enableCors({
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:4200'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  });
+  
+  // Global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Strip properties that don't have decorators
+      forbidNonWhitelisted: true, // Throw error if non-whitelisted properties are sent
+      transform: true, // Automatically transform payloads to DTOs
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    })
+  );
+  
   // Configure session middleware
+  const sessionSecret = process.env.SESSION_SECRET || 'change-this-secret-key-in-production';
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   app.use(
     session({
-      secret: 'your-secret-key-change-in-production',
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: false, // set to true in production with HTTPS
+        secure: isProduction, // set to true in production with HTTPS
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: 'lax', // CSRF protection
       },
+      name: 'sessionId', // Don't use default session cookie name
     }),
   );
   

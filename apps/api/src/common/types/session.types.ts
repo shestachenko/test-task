@@ -10,9 +10,14 @@ declare module 'express-session' {
   }
 }
 
-// Extend Express Request to include session
+// Extend Express Request to include session and user
 declare module 'express' {
   interface Request {
     session: any;
+    user?: {
+      userId: string;
+      username: string;
+      email: string;
+    };
   }
 }

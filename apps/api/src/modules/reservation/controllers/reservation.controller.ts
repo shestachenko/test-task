@@ -1,7 +1,8 @@
 import {Controller, Get, Query} from '@nestjs/common';
 import {ReservationService} from '../services/reservation.service';
-import {ReservationResultDto, DayBookingsDto} from '@red/shared';
+import {IReservationResultDto, IDayBookingsDto} from '@red/shared';
 import {BaseResponseDto} from '../../../common/dto/base-response.dto';
+import {GetReservationsByDayDto, GetUserBookingsDto} from '../dto';
 
 @Controller('reservations')
 export class ReservationController {
@@ -9,25 +10,24 @@ export class ReservationController {
 
   @Get('by-day')
   async getReservationsByDay(
-    @Query('amenityId') amenityId: string,
-    @Query('date') dateString: string,
-  ): Promise<BaseResponseDto<ReservationResultDto[]>> {
-    const date = new Date(dateString);
+    @Query() query: GetReservationsByDayDto,
+  ): Promise<BaseResponseDto<IReservationResultDto[]>> {
+    const date = new Date(query.date);
     
     if (isNaN(date.getTime())) {
-      return BaseResponseDto.fail<ReservationResultDto[]>('Invalid date format');
+      return BaseResponseDto.fail<IReservationResultDto[]>('Invalid date format');
     }
-    const reservations = await this.reservationService.getReservationsByAmenityAndDate(amenityId, date);
+    const reservations = await this.reservationService.getReservationsByAmenityAndDate(query.amenityId, date);
 
-    return BaseResponseDto.ok<ReservationResultDto[]>(reservations);
+    return BaseResponseDto.ok<IReservationResultDto[]>(reservations);
   }
 
   @Get('by-user')
   async getUserBookings(
-    @Query('userId') userId: string,
-  ): Promise<BaseResponseDto<DayBookingsDto[]>> {
-    const bookings = await this.reservationService.getUserBookingsGroupedByDay(userId);
+    @Query() query: GetUserBookingsDto
+  ): Promise<BaseResponseDto<IDayBookingsDto[]>> {    
+    const bookings = await this.reservationService.getUserBookingsGroupedByDay(query.userId);
 
-    return BaseResponseDto.ok<DayBookingsDto[]>(bookings);
+    return BaseResponseDto.ok<IDayBookingsDto[]>(bookings);
   }
 }

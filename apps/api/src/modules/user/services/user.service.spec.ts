@@ -2,7 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing';
 import {ConflictException, UnauthorizedException} from '@nestjs/common';
 import {UserService} from './user.service';
 import {UserRepository} from '../repositories/user.repository';
-import {RegisterDto} from '@red/shared';
+import {IRegisterDto} from '@red/shared';
 
 describe('UserService', () => {
   let service: UserService;
@@ -38,7 +38,7 @@ describe('UserService', () => {
 
   describe('register', () => {
     it('should successfully register a new user', async () => {
-      const registerDto: RegisterDto = {
+      const registerDto: IRegisterDto = {
         user: {
           username: 'testuser',
           password: 'password123',
@@ -75,7 +75,7 @@ describe('UserService', () => {
     });
 
     it('should throw ConflictException when username already exists', async () => {
-      const registerDto: RegisterDto = {
+      const registerDto: IRegisterDto = {
         user: {
           username: 'existinguser',
           password: 'password123',

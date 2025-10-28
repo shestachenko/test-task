@@ -10,7 +10,7 @@ export interface IReservation extends IBaseModel {
   date: Date | string;
 }
 
-export interface ReservationResultDto {
+export interface IReservationResultDto {
   reservationId: string;
   user: IUser | null;
   startTime: string;  // HH:MM format
@@ -18,15 +18,15 @@ export interface ReservationResultDto {
   amenity: IAmenity;
 }
 
-export interface ReservationInfoDto {
+export interface IReservationInfoDto {
   reservationId: string;
   startTime: string;  // HH:MM format
   duration: number;   // duration in minutes
   amenity: IAmenity | null;
 }
 
-export interface DayBookingsDto {
+export interface IDayBookingsDto {
   date: string;  // YYYY-MM-DD format
-  reservations: ReservationInfoDto[];
+  reservations: IReservationInfoDto[];
 }
 
