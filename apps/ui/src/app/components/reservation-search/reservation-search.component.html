@@ -1,0 +1,138 @@
+<div class="reservation-search">
+  <div class="container">
+    <h2>Search Reservations</h2>
+
+    <div class="search-forms">
+      <!-- By Day Search -->
+      <div class="search-form">
+        <h3>Search by Day & Amenity</h3>
+        <form (ngSubmit)="searchByDay()" #byDayForm="ngForm">
+          <div class="form-group">
+            <label for="amenityId">Amenity ID</label>
+            <input
+              type="text"
+              id="amenityId"
+              name="amenityId"
+              [(ngModel)]="amenityId"
+              placeholder="Enter amenity ID"
+              class="form-control"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              [(ngModel)]="selectedDate"
+              [min]="getTodayDate()"
+              class="form-control"
+            />
+          </div>
+          
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="byDayLoading"
+          >
+            {{ byDayLoading ? 'Searching...' : 'Search' }}
+          </button>
+        </form>
+
+        <!-- By Day Results -->
+        <div class="results" *ngIf="byDayError">
+          <div class="error-message">{{ byDayError }}</div>
+        </div>
+
+        <div class="results" *ngIf="byDayResults.length > 0">
+          <h4>Reservations ({{ byDayResults.length }})</h4>
+          <div class="result-list">
+            <div class="result-item" *ngFor="let reservation of byDayResults">
+              <div class="result-header">
+                <strong>{{ reservation.amenityName }}</strong>
+                <span class="reservation-id">ID: {{ reservation.reservationId }}</span>
+              </div>
+              <div class="result-details">
+                <span class="time">
+                  <i class="icon">🕐</i> {{ formatTime(reservation.startTime) }}
+                </span>
+                <span class="duration">
+                  <i class="icon">⏱</i> {{ formatDuration(reservation.duration) }}
+                </span>
+                <span class="user-id">User: {{ reservation.userId }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="results" *ngIf="byDayResults.length === 0 && !byDayLoading && !byDayError">
+          <div class="no-results">No reservations found</div>
+        </div>
+      </div>
+
+      <!-- By User Search -->
+      <div class="search-form">
+        <h3>Search by User</h3>
+        <form (ngSubmit)="searchByUser()" #byUserForm="ngForm">
+          <div class="form-group">
+            <label for="userId">User ID</label>
+            <input
+              type="text"
+              id="userId"
+              name="userId"
+              [(ngModel)]="userId"
+              placeholder="Enter user ID"
+              class="form-control"
+            />
+          </div>
+          
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="byUserLoading"
+          >
+            {{ byUserLoading ? 'Searching...' : 'Search' }}
+          </button>
+        </form>
+
+        <!-- By User Results -->
+        <div class="results" *ngIf="byUserError">
+          <div class="error-message">{{ byUserError }}</div>
+        </div>
+
+        <div class="results" *ngIf="byUserResults.length > 0">
+          <h4>User Bookings ({{ byUserResults.length }} days)</h4>
+          <div class="result-list">
+            <div class="day-bookings" *ngFor="let dayBooking of byUserResults">
+              <div class="day-header">
+                <strong>{{ dayBooking.date }}</strong>
+              </div>
+              <div class="reservations-list">
+                <div class="result-item" *ngFor="let reservation of dayBooking.reservations">
+                  <div class="result-header">
+                    <strong>{{ reservation.amenityName }}</strong>
+                    <span class="reservation-id">ID: {{ reservation.reservationId }}</span>
+                  </div>
+                  <div class="result-details">
+                    <span class="time">
+                      <i class="icon">🕐</i> {{ formatTime(reservation.startTime) }}
+                    </span>
+                    <span class="duration">
+                      <i class="icon">⏱</i> {{ formatDuration(reservation.duration) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="results" *ngIf="byUserResults.length === 0 && !byUserLoading && !byUserError">
+          <div class="no-results">No bookings found</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

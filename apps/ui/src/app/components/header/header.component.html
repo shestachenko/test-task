@@ -1,6 +1,13 @@
 <header class="header">
   <div class="container">
-    <h1>Red API Test UI</h1>
+    <div class="header-content">
+      <h1>Red API Test UI</h1>
+      
+      <nav class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Reservations</a>
+        <a routerLink="/csv-parser" routerLinkActive="active">CSV Parser</a>
+      </nav>
+    </div>
     
     <div class="user-info" *ngIf="currentUser">
       <span class="username">Logged in as: {{ currentUser.username }}</span>

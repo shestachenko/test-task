@@ -1,5 +1,6 @@
 import {Component, OnInit, OnDestroy, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthResponseDto} from '@red/shared';
 import {Subscription} from 'rxjs';
@@ -7,7 +8,7 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
