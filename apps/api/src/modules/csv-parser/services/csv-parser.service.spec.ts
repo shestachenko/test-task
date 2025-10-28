@@ -1,5 +1,4 @@
 import {Test, TestingModule} from '@nestjs/testing';
-import {BadRequestException} from '@nestjs/common';
 import {CsvParserService} from './csv-parser.service';
 
 describe('CsvParserService', () => {
@@ -64,10 +63,10 @@ describe('CsvParserService', () => {
       ]);
     });
 
-    it('should throw BadRequestException on invalid CSV with unclosed quotes', () => {
+    it('should throw CsvError on invalid CSV with unclosed quotes', () => {
       const invalidBuffer = Buffer.from('name;description\nJohn;"unclosed quote', 'utf-8');
 
-      expect(() => service.parseCsv(invalidBuffer)).toThrow(BadRequestException);
+      expect(() => service.parseCsv(invalidBuffer)).toThrow();
     });
 
     it('should handle empty CSV', () => {

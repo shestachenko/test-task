@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing';
-import {BadRequestException} from '@nestjs/common';
 import {CsvParserController} from './csv-parser.controller';
 import {CsvParserService} from '../services/csv-parser.service';
+import {BaseResponseDto} from '../../../common/dto/base-response.dto';
 
 describe('CsvParserController', () => {
   let controller: CsvParserController;
@@ -54,42 +54,37 @@ describe('CsvParserController', () => {
       const result = await controller.parseCsv(mockFile);
 
       expect(service.parseCsv).toHaveBeenCalledWith(mockBuffer);
-      expect(result).toEqual(mockParsedData);
+      expect(result).toEqual(BaseResponseDto.ok(mockParsedData));
     });
 
-    it('should throw BadRequestException when no file is uploaded', async () => {
-      await expect(controller.parseCsv(null)).rejects.toThrow(
-        BadRequestException,
-      );
-      await expect(controller.parseCsv(null)).rejects.toThrow(
-        'No file uploaded',
-      );
+    it('should return fail response when no file is uploaded', async () => {
+      const result = await controller.parseCsv(null);
+
+      expect(result).toEqual(BaseResponseDto.fail('No file uploaded'));
       expect(service.parseCsv).not.toHaveBeenCalled();
     });
 
-    it('should throw BadRequestException when file is not a CSV', async () => {
+    it('should return fail response when file is not a CSV', async () => {
       const nonCsvFile = {
         ...mockFile,
         originalname: 'test.txt',
       };
 
-      await expect(controller.parseCsv(nonCsvFile)).rejects.toThrow(
-        BadRequestException,
-      );
-      await expect(controller.parseCsv(nonCsvFile)).rejects.toThrow(
-        'File must be a CSV file',
-      );
+      const result = await controller.parseCsv(nonCsvFile);
+
+      expect(result).toEqual(BaseResponseDto.fail('File must be a CSV file'));
       expect(service.parseCsv).not.toHaveBeenCalled();
     });
 
-    it('should throw BadRequestException when CSV parsing fails', async () => {
+    it('should return fail response when CSV parsing fails', async () => {
       mockCsvParserService.parseCsv.mockImplementation(() => {
-        throw new BadRequestException('Failed to parse CSV: Invalid delimiter');
+        throw new Error('Invalid delimiter');
       });
 
-      await expect(controller.parseCsv(mockFile)).rejects.toThrow(
-        BadRequestException,
-      );
+      const result = await controller.parseCsv(mockFile);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Invalid delimiter');
       expect(service.parseCsv).toHaveBeenCalled();
     });
   });
