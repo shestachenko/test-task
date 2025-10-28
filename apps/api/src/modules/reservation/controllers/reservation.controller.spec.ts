@@ -46,17 +46,17 @@ describe('ReservationController', () => {
       const mockReservations = [
         {
           reservationId: 'res1',
-          userId: 1,
+          user: {_id: '1', first_name: 'John', last_name: 'Doe'},
           startTime: '09:00',
           duration: 60,
-          amenityName: 'Tennis Court',
+          amenity: {_id: 'amenity1', name: 'Tennis Court'},
         },
         {
           reservationId: 'res2',
-          userId: 2,
+          user: {_id: '2', first_name: 'Jane', last_name: 'Smith'},
           startTime: '10:00',
           duration: 90,
-          amenityName: 'Tennis Court',
+          amenity: {_id: 'amenity1', name: 'Tennis Court'},
         },
       ];
 
@@ -114,13 +114,13 @@ describe('ReservationController', () => {
               reservationId: 'res1',
               startTime: '09:00',
               duration: 60,
-              amenityName: 'Tennis Court',
+              amenity: {_id: 'amenity1', name: 'Tennis Court'},
             },
             {
               reservationId: 'res2',
               startTime: '11:00',
               duration: 90,
-              amenityName: 'Swimming Pool',
+              amenity: {_id: 'amenity2', name: 'Swimming Pool'},
             },
           ],
         },
@@ -131,7 +131,7 @@ describe('ReservationController', () => {
               reservationId: 'res3',
               startTime: '14:00',
               duration: 120,
-              amenityName: 'Gym',
+              amenity: {_id: 'amenity3', name: 'Gym'},
             },
           ],
         },

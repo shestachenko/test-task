@@ -50,7 +50,7 @@
           <div class="result-list">
             <div class="result-item" *ngFor="let reservation of byDayResults">
               <div class="result-header">
-                <strong>{{ reservation.amenityName }}</strong>
+                <strong>{{ reservation.amenity.name }}</strong>
                 <span class="reservation-id">ID: {{ reservation.reservationId }}</span>
               </div>
               <div class="result-details">
@@ -60,7 +60,7 @@
                 <span class="duration">
                   <i class="icon">⏱</i> {{ formatDuration(reservation.duration) }}
                 </span>
-                <span class="user-id">User: {{ reservation.userId }}</span>
+                <span class="user-id">User: {{ reservation.user?.first_name }} {{ reservation.user?.last_name }}</span>
               </div>
             </div>
           </div>
@@ -111,7 +111,7 @@
               <div class="reservations-list">
                 <div class="result-item" *ngFor="let reservation of dayBooking.reservations">
                   <div class="result-header">
-                    <strong>{{ reservation.amenityName }}</strong>
+                    <strong>{{ reservation.amenity?.name }}</strong>
                     <span class="reservation-id">ID: {{ reservation.reservationId }}</span>
                   </div>
                   <div class="result-details">

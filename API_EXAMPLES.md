@@ -132,17 +132,35 @@ curl "http://localhost:3000/api/reservations/by-day?amenityId=507f1f77bcf86cd799
   "data": [
     {
       "reservationId": "507f1f77bcf86cd799439011",
-      "userId": 97,
+      "user": {
+        "_id": "507f1f77bcf86cd799439001",
+        "username": "john_doe",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john@example.com"
+      },
       "startTime": "10:00",
       "duration": 300,
-      "amenityName": "Tennis Court"
+      "amenity": {
+        "_id": "507f1f77bcf86cd799439011",
+        "name": "Tennis Court"
+      }
     },
     {
       "reservationId": "507f1f77bcf86cd799439012",
-      "userId": 45,
+      "user": {
+        "_id": "507f1f77bcf86cd799439002",
+        "username": "jane_smith",
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "email": "jane@example.com"
+      },
       "startTime": "14:30",
       "duration": 120,
-      "amenityName": "Tennis Court"
+      "amenity": {
+        "_id": "507f1f77bcf86cd799439011",
+        "name": "Tennis Court"
+      }
     }
   ]
 }
@@ -177,13 +195,19 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/reservations/by-user?userId=50
           "reservationId": "507f1f77bcf86cd799439011",
           "startTime": "09:00",
           "duration": 60,
-          "amenityName": "Tennis Court"
+          "amenity": {
+            "_id": "507f1f77bcf86cd799439011",
+            "name": "Tennis Court"
+          }
         },
         {
           "reservationId": "507f1f77bcf86cd799439012",
           "startTime": "15:00",
           "duration": 90,
-          "amenityName": "Swimming Pool"
+          "amenity": {
+            "_id": "507f1f77bcf86cd799439012",
+            "name": "Swimming Pool"
+          }
         }
       ]
     },
@@ -194,7 +218,10 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/reservations/by-user?userId=50
           "reservationId": "507f1f77bcf86cd799439013",
           "startTime": "10:00",
           "duration": 120,
-          "amenityName": "Gym"
+          "amenity": {
+            "_id": "507f1f77bcf86cd799439013",
+            "name": "Gym"
+          }
         }
       ]
     }

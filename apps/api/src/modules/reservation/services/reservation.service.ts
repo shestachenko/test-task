@@ -1,17 +1,19 @@
 import {Injectable} from '@nestjs/common';
 import {ReservationRepository} from '../repositories/reservation.repository';
 import {AmenityService} from '../../amenity/services/amenity.service';
-import {ReservationBookingDto} from '../dto/reservation-booking.dto';
+import {UserService} from '../../user/services/user.service';
+import {ReservationResultDto} from '../dto/reservation-booking.dto';
 import {DayBookingsDto, ReservationInfoDto} from '../dto/user-bookings.dto';
 
 @Injectable()
 export class ReservationService {
   constructor(
     private readonly reservationRepository: ReservationRepository,
-    private readonly amenityService: AmenityService
+    private readonly amenityService: AmenityService,
+    private readonly userService: UserService
   ) {}
 
-  async getReservationsByAmenityAndDate(amenityId: string, date: Date): Promise<ReservationBookingDto[]> {
+  async getReservationsByAmenityAndDate(amenityId: string, date: Date): Promise<ReservationResultDto[]> {
     const reservations = await this.reservationRepository.findByAmenityAndDate(amenityId, date);
 
     // Get amenity details
@@ -19,6 +21,28 @@ export class ReservationService {
     if (!amenity) {
       return [];
     }
+
+    // Get unique user IDs
+    const uniqueUserIds = [...new Set(reservations.map(r => r.userId))];
+    
+    // Fetch all users in parallel
+    const userMap = new Map();
+    await Promise.all(
+      uniqueUserIds.map(async (userId) => {
+        const user = await this.userService.findById(userId);
+        if (user) {
+          // Convert to plain object with string _id
+          const userPlain = user.toObject();
+          userMap.set(userId, {
+            ...userPlain,
+            _id: user._id.toString()
+          });
+        }
+      })
+    );
+
+    // Convert amenity to plain object
+    const amenityPlain = amenity.toObject();
 
     // Transform to DTO format
     return reservations.map((reservation) => {
@@ -31,10 +55,13 @@ export class ReservationService {
 
       return {
         reservationId: reservation._id.toString(),
-        userId: reservation.userId,
+        user: userMap.get(reservation.userId) || null,
         startTime: startTimeFormatted,
         duration,
-        amenityName: amenity.name,
+        amenity: {
+          ...amenityPlain,
+          _id: amenity._id.toString()
+        },
       };
     });
   }
@@ -60,12 +87,17 @@ export class ReservationService {
     const uniqueAmenityIds = new Set(reservations.map(r => r.amenityId));
     
     // Fetch all amenities in parallel
-    const amenityMap = new Map<string, string>();
+    const amenityMap = new Map();
     await Promise.all(
       Array.from(uniqueAmenityIds).map(async (amenityId) => {
         const amenity = await this.amenityService.findById(amenityId);
         if (amenity) {
-          amenityMap.set(amenityId, amenity.name);
+          // Convert to plain object with string _id
+          const amenityPlain = amenity.toObject();
+          amenityMap.set(amenityId, {
+            ...amenityPlain,
+            _id: amenity._id.toString()
+          });
         }
       })
     );
@@ -85,7 +117,7 @@ export class ReservationService {
           reservationId: reservation._id.toString(),
           startTime: startTimeFormatted,
           duration,
-          amenityName: amenityMap.get(reservation.amenityId) || 'Unknown'
+          amenity: amenityMap.get(reservation.amenityId) || null
         };
       });
 

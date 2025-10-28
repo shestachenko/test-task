@@ -1,6 +1,6 @@
 import {Controller, Get, Query} from '@nestjs/common';
 import {ReservationService} from '../services/reservation.service';
-import {ReservationBookingDto} from '../dto/reservation-booking.dto';
+import {ReservationResultDto} from '../dto/reservation-booking.dto';
 import {DayBookingsDto} from '../dto/user-bookings.dto';
 import {BaseResponseDto} from '../../../common/dto/base-response.dto';
 
@@ -12,15 +12,15 @@ export class ReservationController {
   async getReservationsByDay(
     @Query('amenityId') amenityId: string,
     @Query('date') dateString: string,
-  ): Promise<BaseResponseDto<ReservationBookingDto[]>> {
+  ): Promise<BaseResponseDto<ReservationResultDto[]>> {
     const date = new Date(dateString);
     
     if (isNaN(date.getTime())) {
-      return BaseResponseDto.fail<ReservationBookingDto[]>('Invalid date format');
+      return BaseResponseDto.fail<ReservationResultDto[]>('Invalid date format');
     }
     const reservations = await this.reservationService.getReservationsByAmenityAndDate(amenityId, date);
 
-    return BaseResponseDto.ok<ReservationBookingDto[]>(reservations);
+    return BaseResponseDto.ok<ReservationResultDto[]>(reservations);
   }
 
   @Get('by-user')

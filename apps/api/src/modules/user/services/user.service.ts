@@ -39,5 +39,9 @@ export class UserService {
 
     return user;
   }
+
+  async findById(id: string): Promise<UserDocument | null> {
+    return this.userRepository.findById(id);
+  }
 }
 

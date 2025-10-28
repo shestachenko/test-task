@@ -2,11 +2,13 @@ import {Test, TestingModule} from '@nestjs/testing';
 import {ReservationService} from './reservation.service';
 import {ReservationRepository} from '../repositories/reservation.repository';
 import {AmenityService} from '../../amenity/services/amenity.service';
+import {UserService} from '../../user/services/user.service';
 
 describe('ReservationService', () => {
   let service: ReservationService;
   let reservationRepository: ReservationRepository;
   let amenityService: AmenityService;
+  let userService: UserService;
 
   const mockReservationRepository = {
     findByAmenityAndDate: jest.fn(),
@@ -14,6 +16,10 @@ describe('ReservationService', () => {
   };
 
   const mockAmenityService = {
+    findById: jest.fn(),
+  };
+
+  const mockUserService = {
     findById: jest.fn(),
   };
 
@@ -29,12 +35,17 @@ describe('ReservationService', () => {
           provide: AmenityService,
           useValue: mockAmenityService,
         },
+        {
+          provide: UserService,
+          useValue: mockUserService,
+        },
       ],
     }).compile();
 
     service = module.get<ReservationService>(ReservationService);
     reservationRepository = module.get<ReservationRepository>(ReservationRepository);
     amenityService = module.get<AmenityService>(AmenityService);
+    userService = module.get<UserService>(UserService);
   });
 
   afterEach(() => {
@@ -51,8 +62,16 @@ describe('ReservationService', () => {
       const date = new Date('2024-01-15');
 
       const mockAmenity = {
-        _id: '507f1f77bcf86cd799439011',
+        _id: {toString: () => '507f1f77bcf86cd799439011'},
         name: 'Swimming Pool',
+        toObject: () => ({_id: {toString: () => '507f1f77bcf86cd799439011'}, name: 'Swimming Pool'}),
+      };
+
+      const mockUser = {
+        _id: {toString: () => '507f1f77bcf86cd799439021'},
+        first_name: 'John',
+        last_name: 'Doe',
+        toObject: () => ({_id: {toString: () => '507f1f77bcf86cd799439021'}, first_name: 'John', last_name: 'Doe'}),
       };
 
       const mockReservations = [
@@ -76,12 +95,16 @@ describe('ReservationService', () => {
 
       mockReservationRepository.findByAmenityAndDate.mockResolvedValue(mockReservations);
       mockAmenityService.findById.mockResolvedValue(mockAmenity);
+      mockUserService.findById.mockResolvedValue(mockUser);
 
       const result = await service.getReservationsByAmenityAndDate(amenityId, date);
 
       expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({reservationId: 'reservation1', userId: '507f1f77bcf86cd799439021', startTime: '08:00', duration: 60, amenityName: 'Swimming Pool'});
-      expect(result[1]).toEqual({reservationId: 'reservation2', userId: '507f1f77bcf86cd799439022', startTime: '10:00', duration: 60, amenityName: 'Swimming Pool'});
+      expect(result[0].reservationId).toBe('reservation1');
+      expect(result[0].startTime).toBe('08:00');
+      expect(result[0].duration).toBe(60);
+      expect(result[0].amenity).toBeDefined();
+      expect(result[0].user).toBeDefined();
       expect(mockReservationRepository.findByAmenityAndDate).toHaveBeenCalledWith(amenityId, date);
       expect(mockAmenityService.findById).toHaveBeenCalledWith(amenityId);
     });
@@ -114,8 +137,9 @@ describe('ReservationService', () => {
       const date = new Date('2024-01-15');
 
       const mockAmenity = {
-        _id: '507f1f77bcf86cd799439011',
+        _id: {toString: () => '507f1f77bcf86cd799439011'},
         name: 'Swimming Pool',
+        toObject: () => ({_id: {toString: () => '507f1f77bcf86cd799439011'}, name: 'Swimming Pool'}),
       };
 
       mockReservationRepository.findByAmenityAndDate.mockResolvedValue([]);
@@ -131,8 +155,9 @@ describe('ReservationService', () => {
       const date = new Date('2024-01-15');
 
       const mockAmenity = {
-        _id: '507f1f77bcf86cd799439011',
+        _id: {toString: () => '507f1f77bcf86cd799439011'},
         name: 'Tennis Court',
+        toObject: () => ({_id: {toString: () => '507f1f77bcf86cd799439011'}, name: 'Tennis Court'}),
       };
 
       const mockReservations = [
@@ -187,8 +212,8 @@ describe('ReservationService', () => {
       ];
 
       const mockAmenities = [
-        {_id: '507f1f77bcf86cd799439011', name: 'Swimming Pool'},
-        {_id: '507f1f77bcf86cd799439012', name: 'Tennis Court'},
+        {_id: {toString: () => '507f1f77bcf86cd799439011'}, name: 'Swimming Pool', toObject: () => ({_id: {toString: () => '507f1f77bcf86cd799439011'}, name: 'Swimming Pool'})},
+        {_id: {toString: () => '507f1f77bcf86cd799439012'}, name: 'Tennis Court', toObject: () => ({_id: {toString: () => '507f1f77bcf86cd799439012'}, name: 'Tennis Court'})},
       ];
 
       mockReservationRepository.findByUserId.mockResolvedValue(mockReservations);
@@ -205,8 +230,14 @@ describe('ReservationService', () => {
       expect(result[1].date).toBe('2024-01-16');
       expect(result[1].reservations).toHaveLength(1);
 
-      expect(result[0].reservations[0]).toEqual({reservationId: 'reservation1', startTime: '08:00', duration: 60, amenityName: 'Swimming Pool'});
-      expect(result[0].reservations[1]).toEqual({reservationId: 'reservation2', startTime: '10:00', duration: 60, amenityName: 'Tennis Court'});
+      expect(result[0].reservations[0].reservationId).toBe('reservation1');
+      expect(result[0].reservations[0].startTime).toBe('08:00');
+      expect(result[0].reservations[0].duration).toBe(60);
+      expect(result[0].reservations[0].amenity).toBeDefined();
+      expect(result[0].reservations[1].reservationId).toBe('reservation2');
+      expect(result[0].reservations[1].startTime).toBe('10:00');
+      expect(result[0].reservations[1].duration).toBe(60);
+      expect(result[0].reservations[1].amenity).toBeDefined();
     });
 
     it('should return empty array when no reservations found', async () => {
@@ -250,8 +281,9 @@ describe('ReservationService', () => {
       ];
 
       const mockAmenity = {
-        _id: '507f1f77bcf86cd799439011',
+        _id: {toString: () => '507f1f77bcf86cd799439011'},
         name: 'Swimming Pool',
+        toObject: () => ({_id: {toString: () => '507f1f77bcf86cd799439011'}, name: 'Swimming Pool'}),
       };
 
       mockReservationRepository.findByUserId.mockResolvedValue(mockReservations);
@@ -285,7 +317,7 @@ describe('ReservationService', () => {
       const result = await service.getUserBookingsGroupedByDay(userId);
 
       expect(result).toHaveLength(1);
-      expect(result[0].reservations[0].amenityName).toBe('Unknown');
+      expect(result[0].reservations[0].amenity).toBeNull();
     });
   });
 });
