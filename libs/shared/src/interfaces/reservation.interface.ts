@@ -1,5 +1,6 @@
-export interface ReservationModel {
-  id?: string;
+import {IBaseModel} from './base.model.interface';
+
+export interface IReservation extends IBaseModel {
   amenityId: string;
   userId: string;
   startTime: number;  // minutes from 00:00 (e.g., 300 = 5:00)
@@ -22,3 +23,4 @@ export interface UpdateReservationDto {
   endTime?: number;
   date?: Date | string;
 }
+

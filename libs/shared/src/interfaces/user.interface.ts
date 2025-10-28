@@ -1,5 +1,6 @@
-export interface UserModel {
-  id?: string;
+import {IBaseModel} from './base.model.interface';
+
+export interface IUser extends IBaseModel {
   username: string;
   password: string;
   first_name: string;
@@ -39,3 +40,4 @@ export interface AuthResponseDto {
   username: string;
   email: string;
 }
+

@@ -1,11 +1,11 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {HydratedDocument} from 'mongoose';
-import {AmenityModel} from '@red/shared';
+import {IAmenity} from '@red/shared';
 
 export type AmenityDocument = HydratedDocument<Amenity>;
 
 @Schema({timestamps: true})
-export class Amenity implements Omit<AmenityModel, 'id'> {
+export class Amenity implements IAmenity {
   @Prop({required: true})
   name: string;
 }

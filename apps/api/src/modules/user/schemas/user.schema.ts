@@ -1,6 +1,7 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {HydratedDocument} from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import {IUser} from '@red/shared';
 
 export interface UserMethods {
   validatePassword(password: string): Promise<boolean>;
@@ -9,7 +10,7 @@ export interface UserMethods {
 export type UserDocument = HydratedDocument<User & UserMethods>;
 
 @Schema({timestamps: true})
-export class User {
+export class User implements IUser {
   @Prop({required: true, unique: true})
   username: string;
 

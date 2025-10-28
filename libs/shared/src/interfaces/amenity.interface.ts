@@ -1,5 +1,6 @@
-export interface AmenityModel {
-  id?: string;
+import {IBaseModel} from './base.model.interface';
+
+export interface IAmenity extends IBaseModel {
   name: string;
 }
 
@@ -10,3 +11,4 @@ export interface CreateAmenityDto {
 export interface UpdateAmenityDto {
   name?: string;
 }
+
