@@ -41,10 +41,11 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: isProduction, // set to true in production with HTTPS
+        secure: false, // set to false when behind nginx proxy (nginx will handle HTTPS)
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         sameSite: 'lax', // CSRF protection
+        path: '/', // Make sure cookie is accessible on all paths
       },
       name: 'sessionId', // Don't use default session cookie name
     }),

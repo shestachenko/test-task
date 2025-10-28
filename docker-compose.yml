@@ -29,6 +29,7 @@ services:
       PORT: 3000
       NODE_ENV: production
       MONGODB_URI: mongodb://mongodb:27017/hotel-reservation
+      ALLOWED_ORIGINS: http://localhost:4200,http://localhost:80,http://ui
     depends_on:
       - mongodb
     networks:
