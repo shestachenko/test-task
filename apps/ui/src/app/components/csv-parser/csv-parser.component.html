@@ -2,9 +2,64 @@
   <app-login *ngIf="!isAuthenticated()"></app-login>
   
   <div *ngIf="isAuthenticated()" class="container">
-    <h2>CSV Parser</h2>
-    <p>This page is under construction.</p>
-    <p>Authentication required to access this feature.</p>
+    <div class="header">
+      <h2>CSV Parser</h2>
+      <p>Upload a CSV file to parse and view as JSON</p>
+    </div>
+
+    <div class="upload-section">
+      <form (ngSubmit)="onSubmit()">
+        <div class="file-input-wrapper">
+          <label for="fileInput" class="file-label">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>{{ selectedFile ? selectedFile.name : 'Choose CSV File' }}</span>
+          </label>
+          <input
+            id="fileInput"
+            type="file"
+            accept=".csv"
+            (change)="onFileSelected($event)"
+            class="file-input"
+          />
+        </div>
+
+        <div class="buttons">
+          <button type="submit" [disabled]="!selectedFile || isLoading" class="btn btn-primary">
+            <span *ngIf="isLoading">Parsing...</span>
+            <span *ngIf="!isLoading">Parse CSV</span>
+          </button>
+          <button type="button" (click)="reset()" class="btn btn-secondary">
+            Reset
+          </button>
+        </div>
+      </form>
+
+      <div *ngIf="error" class="error-message">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ error }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="jsonString" class="result-section">
+      <div class="result-header">
+        <h3>Parsed Data (JSON)</h3>
+        <button (click)="copyToClipboard()" class="btn btn-small">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy JSON
+        </button>
+      </div>
+      <pre class="json-display">{{ jsonString }}</pre>
+    </div>
   </div>
 </div>
-

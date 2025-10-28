@@ -79,5 +79,10 @@ export class AuthService {
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
   }
+
+  clearUser(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+  }
 }
 

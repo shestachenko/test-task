@@ -1,8 +1,9 @@
-import {Controller, Post, UseInterceptors, UploadedFile, BadRequestException, UseGuards} from '@nestjs/common';
+import {Controller, Post, UseInterceptors, UploadedFile, UseGuards} from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
-import {CsvParserService} from '../services/csv-parser.service';
+import {CsvParserService, ParsedRow} from '../services/csv-parser.service';
 import {memoryStorage} from 'multer';
 import {AuthGuard} from '../../../common/guards/auth.guard';
+import {BaseResponseDto} from '../../../common/dto/base-response.dto';
 
 @Controller('csv-parser')
 export class CsvParserController {
@@ -18,16 +19,22 @@ export class CsvParserController {
       },
     }),
   )
-  async parseCsv(@UploadedFile() file: Express.Multer.File) {
+  async parseCsv(@UploadedFile() file: Express.Multer.File): Promise<BaseResponseDto<ParsedRow[]>> {
     if (!file) {
-      throw new BadRequestException('No file uploaded');
+      return BaseResponseDto.fail<ParsedRow[]>('No file uploaded');
     }
 
     if (!file.originalname.endsWith('.csv')) {
-      throw new BadRequestException('File must be a CSV file');
+      return BaseResponseDto.fail<ParsedRow[]>('File must be a CSV file');
     }
 
-    return this.csvParserService.parseCsv(file.buffer);
+    try {
+      const parsedData = this.csvParserService.parseCsv(file.buffer);
+      return BaseResponseDto.ok<ParsedRow[]>(parsedData);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to parse CSV';
+      return BaseResponseDto.fail<ParsedRow[]>(errorMessage);
+    }
   }
 }
 
