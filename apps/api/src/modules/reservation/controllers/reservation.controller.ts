@@ -1,7 +1,6 @@
 import {Controller, Get, Query} from '@nestjs/common';
 import {ReservationService} from '../services/reservation.service';
-import {ReservationResultDto} from '../dto/reservation-booking.dto';
-import {DayBookingsDto} from '../dto/user-bookings.dto';
+import {ReservationResultDto, DayBookingsDto} from '@red/shared';
 import {BaseResponseDto} from '../../../common/dto/base-response.dto';
 
 @Controller('reservations')

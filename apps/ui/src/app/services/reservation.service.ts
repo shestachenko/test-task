@@ -1,7 +1,7 @@
 import {Injectable, inject} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {IUser, IAmenity} from '@red/shared';
+import {ReservationResultDto, ReservationInfoDto, DayBookingsDto} from '@red/shared';
 
 interface BaseResponse<T> {
   success: boolean;
@@ -9,25 +9,10 @@ interface BaseResponse<T> {
   error?: string;
 }
 
-export interface ReservationBooking {
-  reservationId: string;
-  user: IUser | null;
-  startTime: string;
-  duration: number;
-  amenity: IAmenity;
-}
-
-export interface ReservationInfo {
-  reservationId: string;
-  startTime: string;
-  duration: number;
-  amenity: IAmenity | null;
-}
-
-export interface DayBookings {
-  date: string;
-  reservations: ReservationInfo[];
-}
+// Re-export shared types with aliases for backward compatibility
+export type ReservationBooking = ReservationResultDto;
+export type ReservationInfo = ReservationInfoDto;
+export type DayBookings = DayBookingsDto;
 
 @Injectable({
   providedIn: 'root',

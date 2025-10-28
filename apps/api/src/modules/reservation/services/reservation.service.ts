@@ -2,8 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {ReservationRepository} from '../repositories/reservation.repository';
 import {AmenityService} from '../../amenity/services/amenity.service';
 import {UserService} from '../../user/services/user.service';
-import {ReservationResultDto} from '../dto/reservation-booking.dto';
-import {DayBookingsDto, ReservationInfoDto} from '../dto/user-bookings.dto';
+import {ReservationResultDto, DayBookingsDto, ReservationInfoDto} from '@red/shared';
 
 @Injectable()
 export class ReservationService {

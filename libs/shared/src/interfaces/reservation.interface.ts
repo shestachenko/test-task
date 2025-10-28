@@ -1,4 +1,6 @@
 import {IBaseModel} from './base.model.interface';
+import {IUser} from './user.interface';
+import {IAmenity} from './amenity.interface';
 
 export interface IReservation extends IBaseModel {
   amenityId: string;
@@ -8,19 +10,23 @@ export interface IReservation extends IBaseModel {
   date: Date | string;
 }
 
-export interface CreateReservationDto {
-  amenityId: string;
-  userId: string;
-  startTime: number;
-  endTime: number;
-  date: Date | string;
+export interface ReservationResultDto {
+  reservationId: string;
+  user: IUser | null;
+  startTime: string;  // HH:MM format
+  duration: number;   // duration in minutes
+  amenity: IAmenity;
 }
 
-export interface UpdateReservationDto {
-  amenityId?: string;
-  userId?: string;
-  startTime?: number;
-  endTime?: number;
-  date?: Date | string;
+export interface ReservationInfoDto {
+  reservationId: string;
+  startTime: string;  // HH:MM format
+  duration: number;   // duration in minutes
+  amenity: IAmenity | null;
+}
+
+export interface DayBookingsDto {
+  date: string;  // YYYY-MM-DD format
+  reservations: ReservationInfoDto[];
 }
 
