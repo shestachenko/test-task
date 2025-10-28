@@ -2,24 +2,10 @@ import {IBaseModel} from './base.model.interface';
 
 export interface IUser extends IBaseModel {
   username: string;
-  password: string;
+  password?: string;
   first_name: string;
   last_name: string;
   email: string;
-}
-
-export interface CreateUserDto {
-  username: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-}
-
-export interface UpdateUserDto {
-  first_name?: string;
-  last_name?: string;
-  email?: string;
 }
 
 export interface LoginDto {
@@ -28,16 +14,10 @@ export interface LoginDto {
 }
 
 export interface RegisterDto {
-  username: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  email: string;
+  user: IUser;
 }
 
 export interface AuthResponseDto {
-  userId: string;
-  username: string;
-  email: string;
+  user: IUser;
 }
 

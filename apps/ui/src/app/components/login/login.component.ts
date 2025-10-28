@@ -61,11 +61,13 @@ export class LoginComponent {
 
   private register(): void {
     this.authService.register({
-      username: this.username,
-      password: this.password,
-      first_name: this.firstName,
-      last_name: this.lastName,
-      email: this.email,
+      user: {
+        username: this.username,
+        password: this.password,
+        first_name: this.firstName,
+        last_name: this.lastName,
+        email: this.email,
+      }
     }).subscribe({
       next: (response) => {
         this.loading = false;

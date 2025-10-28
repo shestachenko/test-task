@@ -9,18 +9,18 @@ export class UserService {
 
   async register(registerDto: RegisterDto): Promise<UserDocument> {
     // Check if user already exists
-    const existingUser = await this.userRepository.findByUsername(registerDto.username);
+    const existingUser = await this.userRepository.findByUsername(registerDto.user.username);
     if (existingUser) {
       throw new ConflictException('Username already exists');
     }
 
     // Create new user
     return await this.userRepository.create({
-      username: registerDto.username,
-      password: registerDto.password, // Will be hashed by pre-save hook
-      first_name: registerDto.first_name,
-      last_name: registerDto.last_name,
-      email: registerDto.email,
+      username: registerDto.user.username,
+      password: registerDto.user.password, // Will be hashed by pre-save hook
+      first_name: registerDto.user.first_name,
+      last_name: registerDto.user.last_name,
+      email: registerDto.user.email,
     });
   }
 

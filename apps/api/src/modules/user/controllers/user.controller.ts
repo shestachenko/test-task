@@ -16,10 +16,14 @@ export class UserController {
     try {
       const user = await this.userService.register(registerDto);
       this.saveUserToSession(user, req);
-      const response = {
-        userId: user._id.toString(),
-        username: user.username,
-        email: user.email,
+      const response: AuthResponseDto = {
+        user: {
+          _id: user._id.toString(),
+          username: user.username,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+        }
       }
 
       return BaseResponseDto.ok<AuthResponseDto>(response);
@@ -37,10 +41,14 @@ export class UserController {
     try {
       const user = await this.userService.login(loginDto.username, loginDto.password);
       this.saveUserToSession(user, req);
-      const response = {
-        userId: user._id.toString(),
-        username: user.username,
-        email: user.email,
+      const response: AuthResponseDto = {
+        user: {
+          _id: user._id.toString(),
+          username: user.username,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+        }
       }
 
       return BaseResponseDto.ok<AuthResponseDto>(response);

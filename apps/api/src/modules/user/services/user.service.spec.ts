@@ -39,11 +39,13 @@ describe('UserService', () => {
   describe('register', () => {
     it('should successfully register a new user', async () => {
       const registerDto: RegisterDto = {
-        username: 'testuser',
-        password: 'password123',
-        first_name: 'Test',
-        last_name: 'User',
-        email: 'test@example.com',
+        user: {
+          username: 'testuser',
+          password: 'password123',
+          first_name: 'Test',
+          last_name: 'User',
+          email: 'test@example.com',
+        }
       };
 
       const mockUser = {
@@ -64,21 +66,23 @@ describe('UserService', () => {
       expect(result).toEqual(mockUser);
       expect(mockRepository.findByUsername).toHaveBeenCalledWith('testuser');
       expect(mockRepository.create).toHaveBeenCalledWith({
-        username: registerDto.username,
-        password: registerDto.password,
-        first_name: registerDto.first_name,
-        last_name: registerDto.last_name,
-        email: registerDto.email,
+        username: registerDto.user.username,
+        password: registerDto.user.password,
+        first_name: registerDto.user.first_name,
+        last_name: registerDto.user.last_name,
+        email: registerDto.user.email,
       });
     });
 
     it('should throw ConflictException when username already exists', async () => {
       const registerDto: RegisterDto = {
-        username: 'existinguser',
-        password: 'password123',
-        first_name: 'Test',
-        last_name: 'User',
-        email: 'test@example.com',
+        user: {
+          username: 'existinguser',
+          password: 'password123',
+          first_name: 'Test',
+          last_name: 'User',
+          email: 'test@example.com',
+        }
       };
 
       const existingUser = {

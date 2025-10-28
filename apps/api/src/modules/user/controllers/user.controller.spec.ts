@@ -50,11 +50,13 @@ describe('UserController', () => {
   describe('register', () => {
     it('should successfully register a new user and create session', async () => {
       const registerDto: RegisterDto = {
-        username: 'newuser',
-        password: 'password123',
-        first_name: 'New',
-        last_name: 'User',
-        email: 'newuser@example.com',
+        user: {
+          username: 'newuser',
+          password: 'password123',
+          first_name: 'New',
+          last_name: 'User',
+          email: 'newuser@example.com',
+        }
       };
 
       mockUserService.register.mockResolvedValue(mockUser);
@@ -67,19 +69,25 @@ describe('UserController', () => {
       expect(mockRequest.session.email).toBe('test@example.com');
       expect(result.success).toBe(true);
       expect(result.data).toEqual({
-        userId: 'user123',
-        username: 'testuser',
-        email: 'test@example.com',
+        user: {
+          _id: 'user123',
+          username: 'testuser',
+          first_name: 'Test',
+          last_name: 'User',
+          email: 'test@example.com',
+        }
       });
     });
 
     it('should return fail response if username already exists', async () => {
       const registerDto: RegisterDto = {
-        username: 'existinguser',
-        password: 'password123',
-        first_name: 'Existing',
-        last_name: 'User',
-        email: 'existing@example.com',
+        user: {
+          username: 'existinguser',
+          password: 'password123',
+          first_name: 'Existing',
+          last_name: 'User',
+          email: 'existing@example.com',
+        }
       };
 
       mockUserService.register.mockRejectedValue(
@@ -94,11 +102,13 @@ describe('UserController', () => {
 
     it('should return fail response on general registration failure', async () => {
       const registerDto: RegisterDto = {
-        username: 'testuser',
-        password: 'password123',
-        first_name: 'Test',
-        last_name: 'User',
-        email: 'test@example.com',
+        user: {
+          username: 'testuser',
+          password: 'password123',
+          first_name: 'Test',
+          last_name: 'User',
+          email: 'test@example.com',
+        }
       };
 
       mockUserService.register.mockRejectedValue(new Error('Database error'));
@@ -127,9 +137,13 @@ describe('UserController', () => {
       expect(mockRequest.session.email).toBe('test@example.com');
       expect(result.success).toBe(true);
       expect(result.data).toEqual({
-        userId: 'user123',
-        username: 'testuser',
-        email: 'test@example.com',
+        user: {
+          _id: 'user123',
+          username: 'testuser',
+          first_name: 'Test',
+          last_name: 'User',
+          email: 'test@example.com',
+        }
       });
     });
 
